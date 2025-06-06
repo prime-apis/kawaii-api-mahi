@@ -1,14 +1,9 @@
-import express from "express";
 import fs from "fs";
 import path from "path";
 
-const app = express();
-const port = process.env.PORT || 3000;
+const imagesPath = path.join(process.cwd(), "images.json");
 
 let images = [];
-
-// Load images.json once at startup
-const imagesPath = path.join(process.cwd(), "images.json");
 
 try {
   const data = fs.readFileSync(imagesPath, "utf-8");
@@ -19,16 +14,19 @@ try {
   images = [];
 }
 
-app.get("/api/mahi/kawaii", (req, res) => {
+export default function handler(req, res) {
+  if (req.method !== "GET") {
+    res.status(405).json({ error: "Method not allowed" });
+    return;
+  }
+
   if (images.length === 0) {
-    return res.status(500).json({ error: "No images available" });
+    res.status(500).json({ error: "No images available" });
+    return;
   }
 
   const randomIndex = Math.floor(Math.random() * images.length);
   const url = images[randomIndex];
-  res.json({ url });
-});
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+  res.status(200).json({ url });
+}

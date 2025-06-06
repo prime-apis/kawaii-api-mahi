@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/mahi/kawaii.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/mahi/kawaii", "dest": "/api/mahi/kawaii.js" }
+  ]
+}
